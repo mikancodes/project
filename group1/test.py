@@ -21,7 +21,7 @@ for i in range(1, 10001):
    region = random.choice(["North", "South", "East", "West"])
    data.append([i, product["product_id"], product["product_name"], product["category"], quantity, product["unit_price"], total_price, customer_id, timestamp.strftime('%Y-%m-%d %H:%M:%S'), region])
 # Write sample data to CSV file
-with open('sales_data.csv', 'w', newline='') as file:
+with open('sales_data.csv', 'w', newline='') as file: 
    writer = csv.writer(file)
    writer.writerow(["transaction_id", "product_id", "product_name", "category", "quantity", "unit_price", "total_price", "customer_id", "timestamp", "region"])
    writer.writerows(data)
