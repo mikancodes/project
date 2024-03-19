@@ -1,48 +1,62 @@
+# import csv
+# from faker import Faker
+ 
+# fake = Faker()
+ 
+# # Generate fake data
+# for i in range(1,10001):
+#     client_ip = fake.ipv4()
+#     timestamp = fake.date_time_this_year().strftime("[%d/%b/%Y:%H:%M:%S +0000]")
+#     request = "GET / HTTP/1.1"
+#     response_status_code = "200 (OK)"
+#     referer = fake.uri()
+#     user_agent = fake.user_agent()
+    
+# # Prepare data
+# data = [
+#     ["Client IP", "Timestamp", "Request", "Response Status Code", "Referer", "User Agent"],
+#     [client_ip, timestamp, request, response_status_code, referer, user_agent]
+# ]
+ 
+# # Write dataset to CSV file
+# with open('dummy_table.csv', 'w', newline='') as csvfile:
+#     writer = csv.writer(csvfile)
+#     writer.writerows(data)
+ 
+# print("Dummy table created and saved as 'dummy_table.csv'.")
+
+
 import csv
 from faker import Faker
 import random
 import datetime
-import geoip2.database
  
 fake = Faker()
-reader = geoip2.database.Reader('GeoLite2-Country.mmdb')
  
-# Generate fake data for each column
-def generate_fake_data():
+# Generate random data for the query
+def generate_random_data():
     client_ip = fake.ipv4()
-    country = get_country_from_ip(client_ip)
-    timestamp = fake.date_time_this_year()
+    timestamp = fake.date_time_this_year().strftime("[%d/%b/%Y:%H:%M:%S +0000]")
     request = random.choice(["GET", "POST", "PUT", "DELETE"]) + " " + fake.uri_path()
-    response_code = random.choice([200, 404, 500])
-    referer = fake.uri()
+    response_status_code = random.choice(["200 (OK)", "404 (Not Found)", "500 (Internal Server Error)"])
+    referer = fake.uri() if random.random() < 0.5 else None  # Half of the time, referer will be None
     user_agent = fake.user_agent()
-    
-    return client_ip, country, timestamp, request, response_code, referer, user_agent
+    return client_ip, timestamp, request, response_status_code, referer, user_agent
  
-# Get country from IP using geoip2
-def get_country_from_ip(ip):
-    try:
-        response = reader.country(ip)
-        country = response.country.name
-    except:
-        country = "Unknown"
-    return country
- 
-# Generate dataset with fake data
+# Generate dataset with 10,000 random entries
 def generate_dataset(num_entries):
-    dataset = []
+    dataset = [["Client IP", "Timestamp", "Request", "Response Status Code", "Referer", "User Agent"]]
     for _ in range(num_entries):
-        data = generate_fake_data()
+        data = generate_random_data()
         dataset.append(data)
     return dataset
  
-# Generate dataset with 10,000 entries
+# Generate dataset with 10,000 random entries
 dataset = generate_dataset(10000)
  
 # Write dataset to CSV file
-with open('dummy_table.csv', 'w', newline='') as csvfile:
+with open('dummy_table_random_data_10000.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
-    writer.writerow(["Client IP", "Country", "Timestamp", "Request", "Response Code", "Referer", "User Agent"])
     writer.writerows(dataset)
  
-print("Dummy table created and saved as 'dummy_table.csv'.")
+print("Dummy table with 10,000 random data entries created and saved as 'dummy_table_random_data_10000.csv'.")
